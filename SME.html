@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KFH TWQ Workbench — SME Program Lending Presentation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --kfh-dark-green: #2D7864;
+      --kfh-green: #43B02A;
+      --kfh-forest: #0F5E2A;
+      --kfh-dark: #0F172A;
+      --kfh-light-bg: #F8FAFC;
+      --kfh-card-bg: #FFFFFF;
+      --kfh-border: #E2E8F0;
+      --kfh-accent-soft: #ECFDF5;
+      --kfh-gold: #D97706;
+      --radius-squircle: 22px;
+      --radius-sm: 12px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md: 0 8px 30px rgba(0,0,0,0.06);
+      --shadow-lg: 0 16px 40px rgba(15, 94, 42, 0.12);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background: #0B1E19;
+      color: #1E293B;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Presentation Header */
+    .pres-header {
+      background: rgba(15, 30, 25, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(67, 176, 42, 0.2);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--kfh-green), var(--kfh-dark-green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 14px rgba(67, 176, 42, 0.4);
+    }
+
+    .brand-titles h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-titles p {
+      font-size: 0.75rem;
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    .pres-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pres-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.8125rem;
+      font-weight: 650;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .pres-btn:hover {
+      background: var(--kfh-dark-green);
+      border-color: var(--kfh-green);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    .pres-btn.primary {
+      background: linear-gradient(135deg, var(--kfh-forest), var(--kfh-dark-green));
+      border: 1px solid var(--kfh-green);
+      box-shadow: 0 4px 12px rgba(67, 176, 42, 0.25);
+    }
+
+    .slide-counter {
+      color: #E2E8F0;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Main Deck Stage */
+    .deck-viewport {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide-card {
+      width: 100%;
+      min-height: 640px;
+      background: var(--kfh-card-bg);
+      border-radius: var(--radius-squircle);
+      border: 1px solid var(--kfh-border);
+      box-shadow: var(--shadow-lg);
+      padding: 36px 44px;
+      display: none;
+      flex-direction: column;
+      position: relative;
+      animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .slide-card.active {
+      display: flex;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.995);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Slide Header */
+    .slide-header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #F1F5F9;
+      padding-bottom: 16px;
+    }
+
+    .slide-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--kfh-dark-green);
+      background: var(--kfh-accent-soft);
+      padding: 4px 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .slide-title {
+      font-size: 1.65rem;
+      font-weight: 850;
+      color: #0F172A;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .slide-subtitle {
+      font-size: 0.9rem;
+      color: #64748B;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Common Card Styles */
+    .squircle-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .squircle-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #CBD5E1;
+    }
+
+    .squircle-card.highlight {
+      background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%);
+      border: 1.5px solid #86EFAC;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    /* Metric Badges */
+    .metric-chip {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-chip-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-chip-val {
+      font-size: 1.4rem;
+      font-weight: 850;
+      color: #0F172A;
+    }
+
+    .metric-chip-desc {
+      font-size: 0.75rem;
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Flow Chart Steps */
+    .flow-steps {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .flow-step-item {
+      flex: 1;
+      min-width: 170px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .flow-step-item.active {
+      border-color: var(--kfh-green);
+      background: #F0FDF4;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--kfh-dark-green);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+    }
+
+    .step-name {
+      font-size: 0.875rem;
+      font-weight: 750;
+      color: #0F172A;
+    }
+
+    .step-desc {
+      font-size: 0.75rem;
+      color: #64748B;
+      line-height: 1.4;
+    }
+
+    /* Formula Box */
+    .formula-container {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 22px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .formula-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+
+    .formula-row:last-child {
+      border-bottom: none;
+    }
+
+    .formula-badge {
+      background: rgba(67, 176, 42, 0.2);
+      color: #86EFAC;
+      border: 1px solid rgba(67, 176, 42, 0.4);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    /* Calculator Widgets */
+    .calc-box {
+      background: #FFFFFF;
+      border: 1.5px solid #86EFAC;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 28px;
+    }
+
+    .calc-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .calc-slider-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+    }
+
+    .slider-val {
+      color: var(--kfh-dark-green);
+      font-weight: 850;
+      font-size: 0.9375rem;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--kfh-dark-green);
+      cursor: pointer;
+    }
+
+    .calc-results-card {
+      background: linear-gradient(145deg, #064E3B, #0F5E2A);
+      border-radius: 16px;
+      padding: 24px;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(6, 78, 59, 0.3);
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .result-row.big {
+      border-bottom: none;
+      padding-top: 14px;
+    }
+
+    .result-label {
+      font-size: 0.8125rem;
+      color: #D1FAE5;
+    }
+
+    .result-val {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .result-val.highlight {
+      font-size: 1.85rem;
+      color: #FBBF24;
+      font-weight: 900;
+    }
+
+    /* Screenshot Component Styles */
+    .screenshot-thumb-box {
+      border: 1.5px solid #CBD5E1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #F8FAFC;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .screenshot-thumb-box:hover {
+      border-color: var(--kfh-green);
+      box-shadow: 0 8px 20px rgba(15, 94, 42, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .screenshot-thumb-box img {
+      width: 100%;
+      height: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    .screenshot-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      color: #FFFFFF;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 30, 25, 0.95);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 30px;
+    }
+
+    .lightbox-modal.open {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 95vw;
+      max-height: 90vh;
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .lightbox-content img {
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    .lightbox-close-btn {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--kfh-green);
+      color: white;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Presentation Bottom Nav */
+    .pres-footer {
+      background: rgba(15, 30, 25, 0.95);
+      border-top: 1px solid rgba(67, 176, 42, 0.2);
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .timeline-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .timeline-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .timeline-dot.active {
+      background: var(--kfh-green);
+      width: 24px;
+      border-radius: 999px;
+    }
+
+    /* Speaker Notes Drawer */
+    .speaker-drawer {
+      background: #0F172A;
+      color: #94A3B8;
+      font-size: 0.8125rem;
+      padding: 12px 28px;
+      display: none;
+      border-top: 1px solid #334155;
+    }
+
+    .speaker-drawer.open {
+      display: block;
+    }
+
+    .speaker-drawer strong {
+      color: #F8FAFC;
+    }
+
+    /* RTL Support */
+    [dir="rtl"] {
+      text-align: right;
+    }
+  </style>
+</head>
+<body id="presBody">
+
+  <!-- Presentation Header -->
+  <header class="pres-header">
+    <div class="brand-wrap">
+      <div class="brand-logo-badge">KFH</div>
+      <div class="brand-titles">
+        <h1 id="presHeaderTitle">KFH TWQ Workbench — SME Program Lending</h1>
+        <p id="presHeaderSubtitle">Behavioral Underwriting & Automated Origination for Prospect SMEs</p>
+      </div>
+    </div>
+
+    <div class="pres-controls">
+      <button class="pres-btn" id="langToggle" onclick="toggleLanguage()">
+        <i class="fa-solid fa-globe"></i> <span id="langBtnText">العربية</span>
+      </button>
+      <button class="pres-btn" id="notesToggle" onclick="toggleNotes()">
+        <i class="fa-solid fa-note-sticky"></i> <span id="notesBtnText">Notes</span>
+      </button>
+      <span class="slide-counter" id="slideIndicator">1 / 13</span>
+      <button class="pres-btn" onclick="prevSlide()">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button class="pres-btn primary" onclick="nextSlide()">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Deck Viewport -->
+  <main class="deck-viewport">
+
+    <!-- SLIDE 1: Title -->
+    <section class="slide-card active" data-slide="1">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-star"></i> Executive Presentation</span>
+          <h2 class="slide-title">KFH TWQ Workbench: SME Program Lending Platform</h2>
+          <p class="slide-subtitle">Automated Behavioral Underwriting & Digital Facility Origination for Non-Borrowing Prospects</p>
+        </div>
+        <span style="background: #0F5E2A; color: white; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 0.75rem;">RFP Compliant</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3" style="margin-top: 10px;">
+          <div class="squircle-card highlight">
+            <div style="font-size: 2rem; color: var(--kfh-dark-green); margin-bottom: 12px;"><i class="fa-solid fa-bolt"></i></div>
+            <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Zero Audited Financials</h3>
+            <p style="font-size: 0.8125rem; color: #64748B; line-height: 1.5;">Evaluates non-borrowing prospects via bank statement behavioral footprint, eliminating weeks of balance sheet collection.</p>
+          </div>
+          <div class="squircle-card highlight">
+            <div style="font-size: 2rem; color: var(--kfh-green); margin-bottom: 12px;"><i class="fa-solid fa-chart-line"></i></div>
+            <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Behavioral Capacity Engine</h3>
+            <p style="font-size: 0.8125rem; color: #64748B; line-height: 1.5;">Calculates loan capacity from retained monthly cash (25% installment rule & 70% allowable deal capacity up to KD 100,000).</p>
+          </div>
+          <div class="squircle-card highlight">
+            <div style="font-size: 2rem; color: #2563EB; margin-bottom: 12px;"><i class="fa-solid fa-network-wired"></i></div>
+            <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Direct Core Banking</h3>
+            <p style="font-size: 0.8125rem; color: #64748B; line-height: 1.5;">Integrated WCF/SOAP <code>eService</code> with zero-data-loss state locks and automated core loan account generation.</p>
+          </div>
+        </div>
+
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
+          <div>
+            <strong style="color: #0F172A; font-size: 0.875rem;">Kuwait Finance House (KFH) — Program Lending Transformation</strong>
+            <p style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">Sharia-Compliant Financing: Commodity Murabaha & Cashline (Islamic Overdraft) | Turnaround Time: &lt; 24 Hours</p>
+          </div>
+          <button class="pres-btn primary" onclick="nextSlide()">Begin Presentation <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Executive Summary & Opportunity + System Screenshot -->
+    <section class="slide-card" data-slide="2">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-bullseye"></i> Market Opportunity</span>
+          <h2 class="slide-title">The Untapped Non-Borrowing SME Goldmine</h2>
+          <p class="slide-subtitle">Unlocking Credit Opportunities for Non-Borrowing Depositors via Behavioral Analytics</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="squircle-card">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <div style="width: 30px; height: 30px; border-radius: 8px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem;">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <strong style="font-size: 0.875rem; color: #0F172A;">Prospect SME Customer Discovery</strong>
+              </div>
+              <p style="font-size: 0.78125rem; color: #64748B; line-height: 1.45;">
+                Proactively targets active commercial depositors holding business accounts with KFH who currently have zero active credit facilities.
+              </p>
+            </div>
+
+            <div class="squircle-card">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <div style="width: 30px; height: 30px; border-radius: 8px; background: #DBEAFE; color: #1E40AF; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem;">
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <strong style="font-size: 0.875rem; color: #0F172A;">Automated Behavioral Underwriting</strong>
+              </div>
+              <p style="font-size: 0.78125rem; color: #64748B; line-height: 1.45;">
+                Eliminates the traditional barrier of audited balance sheets by underwriting directly against historical account balances and cash flows.
+              </p>
+            </div>
+
+            <div class="squircle-card">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <div style="width: 30px; height: 30px; border-radius: 8px; background: #FEF3C7; color: #92400E; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem;">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+                <strong style="font-size: 0.875rem; color: #0F172A;">Instant Sharia-Compliant Financing</strong>
+              </div>
+              <p style="font-size: 0.78125rem; color: #64748B; line-height: 1.45;">
+                Extends pre-qualified Murabaha and Cashline credit limits up to KD 100,000 with same-day turnaround and digital contract execution.
+              </p>
+            </div>
+          </div>
+
+          <!-- Screenshot Box -->
+          <div class="squircle-card highlight" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="font-size: 0.875rem; color: #065F46;"><i class="fa-solid fa-desktop"></i> System Screen: Operational Dashboard</strong>
+                <span style="font-size: 0.75rem; color: #059669; font-weight: 700;">Live Prototype</span>
+              </div>
+              <div class="screenshot-thumb-box" onclick="openLightbox('screenshots/dashboard-analytics.png', 'Operational Dashboard — Real-time pipeline, status donut, and recent deals overview')">
+                <img src="screenshots/dashboard-analytics.png" alt="Operational Dashboard">
+                <span class="screenshot-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
+              </div>
+            </div>
+            <p style="font-size: 0.75rem; color: #047857; margin-top: 10px; line-height: 1.4;">
+              <strong>Live Visibility:</strong> Management tracks deals across stages (RM Review 32%, Documentation 41%, Implementation 22%, Disbursement 5%).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: RFP Alignment -->
+    <section class="slide-card" data-slide="3">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-file-contract"></i> Strategic Alignment</span>
+          <h2 class="slide-title">Direct Compliance with KFH Program Lending RFP</h2>
+          <p class="slide-subtitle">Delivering the Exact 3-Phase Lifecycle Defined in the Specification Document</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="squircle-card">
+            <div style="font-size: 1.5rem; color: var(--kfh-dark-green); margin-bottom: 10px;"><i class="fa-solid fa-user-plus"></i></div>
+            <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">1. Onboarding Phase</h4>
+            <p style="font-size: 0.8125rem; color: #64748B; margin-bottom: 10px;">Self-initiation via eCorp or RIM portal with 1-click pre-filled templates and minimal document upload.</p>
+            <ul style="font-size: 0.75rem; color: #475569; list-style: none; display: flex; flex-direction: column; gap: 4px;">
+              <li>✔ Non-borrowing active account validation</li>
+              <li>✔ Automated commercial registry extraction</li>
+            </ul>
+          </div>
+
+          <div class="squircle-card">
+            <div style="font-size: 1.5rem; color: var(--kfh-green); margin-bottom: 10px;"><i class="fa-solid fa-microchip"></i></div>
+            <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">2. Review & Approval Phase</h4>
+            <p style="font-size: 0.8125rem; color: #64748B; margin-bottom: 10px;">AI Credit Capacity Engine analyzes cash left in account, POS volumes, and cheque clearance ratios.</p>
+            <ul style="font-size: 0.75rem; color: #475569; list-style: none; display: flex; flex-direction: column; gap: 4px;">
+              <li>✔ Instant limit evaluation up to KD 100,000</li>
+              <li>✔ RM "Apply AI Suggested Terms" button</li>
+            </ul>
+          </div>
+
+          <div class="squircle-card">
+            <div style="font-size: 1.5rem; color: #2563EB; margin-bottom: 10px;"><i class="fa-solid fa-money-bill-transfer"></i></div>
+            <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">3. Funding & Execution Phase</h4>
+            <p style="font-size: 0.8125rem; color: #64748B; margin-bottom: 10px;">Customer digital contract signing followed by real-time Core Banking loan booking and account credit.</p>
+            <ul style="font-size: 0.75rem; color: #475569; list-style: none; display: flex; flex-direction: column; gap: 4px;">
+              <li>✔ Commodity Murabaha & Cashline structures</li>
+              <li>✔ Instant core loan account generation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px 20px; font-size: 0.8125rem; color: #334155;">
+          <strong>RFP Scope Rule:</strong> Phase 1 focuses on existing non-borrowing KFH clients with eCorp access, granting cash facilities up to <strong>KD 100,000</strong> with fixed monthly repayments and Sharia-compliant profit structures.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Prospect Discovery Engine -->
+    <section class="slide-card" data-slide="4">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-radar"></i> Targeting & Prospecting</span>
+          <h2 class="slide-title">Prospect Discovery Engine</h2>
+          <p class="slide-subtitle">Proactively Sourcing Qualified Non-Borrowing Accounts from Core Banking</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="flow-steps">
+          <div class="flow-step-item active">
+            <div class="step-number">1</div>
+            <div class="step-name">Scan Depositors</div>
+            <div class="step-desc">Identifies commercial accounts with ≥12 months operating history and 0 active debt.</div>
+          </div>
+          <div class="flow-step-item active">
+            <div class="step-number">2</div>
+            <div class="step-name">Behavioral Filter</div>
+            <div class="step-desc">Filters for active POS terminals, cash-backed LCs, or consistent positive cash balance.</div>
+          </div>
+          <div class="flow-step-item active">
+            <div class="step-number">3</div>
+            <div class="step-name">Score & Capacity</div>
+            <div class="step-desc">Calculates 25% monthly cash-left installment and 70% allowable facility limit.</div>
+          </div>
+          <div class="flow-step-item active">
+            <div class="step-number">4</div>
+            <div class="step-name">Queue Sourcing</div>
+            <div class="step-desc">Delivers qualified deals directly into RM review queue and pushes eCorp notification.</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+          <div class="squircle-card">
+            <h4 style="font-size: 0.875rem; font-weight: 800; color: #0F172A; margin-bottom: 8px;"><i class="fa-solid fa-check-circle text-green-600"></i> Why Non-Borrowing Clients First?</h4>
+            <ul style="font-size: 0.8125rem; color: #475569; display: flex; flex-direction: column; gap: 8px; padding-left: 18px;">
+              <li>Zero additional balance sheet gathering required.</li>
+              <li>Known entity: KYC, Civil ID, and signatories already on file.</li>
+              <li>Historical account inflows/outflows provide 100% audit accuracy.</li>
+              <li>Pre-qualification dramatically increases conversion rates.</li>
+            </ul>
+          </div>
+          <div class="squircle-card">
+            <h4 style="font-size: 0.875rem; font-weight: 800; color: #0F172A; margin-bottom: 8px;"><i class="fa-solid fa-shield-halved text-blue-600"></i> Automated Eligibility Guards</h4>
+            <ul style="font-size: 0.8125rem; color: #475569; display: flex; flex-direction: column; gap: 8px; padding-left: 18px;">
+              <li>Clean Ci-Net Credit Bureau status with no adverse blacklisting.</li>
+              <li>Customer Risk Rating (CRR) between Grade 1 (Prime) and Grade 3.</li>
+              <li>No unpaid returned/bounced cheques in past 180 days.</li>
+              <li>Average monthly retained cash balance ≥ KD 1,500.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: 5 Behavioral Pillars + System Screenshot -->
+    <section class="slide-card" data-slide="5">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-cubes"></i> Underwriting Model</span>
+          <h2 class="slide-title">The 5 Behavioral Underwriting Pillars</h2>
+          <p class="slide-subtitle">Multi-Dimensional Credit Intelligence Derived from Historical Account Performance</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="squircle-card" style="padding: 12px 16px;">
+              <strong style="color: var(--kfh-dark-green); font-size: 0.8125rem;">1. Average Retained Balance</strong>
+              <p style="font-size: 0.75rem; color: #64748B;">Unencumbered cash remaining in account at month-end after debits.</p>
+            </div>
+            <div class="squircle-card" style="padding: 12px 16px;">
+              <strong style="color: var(--kfh-green); font-size: 0.8125rem;">2. POS Terminal Volumes</strong>
+              <p style="font-size: 0.75rem; color: #64748B;">Frequency, consistency, and volume of transactions through KFH POS.</p>
+            </div>
+            <div class="squircle-card" style="padding: 12px 16px;">
+              <strong style="color: #2563EB; font-size: 0.8125rem;">3. Cash-Backed LCs/LGs</strong>
+              <p style="font-size: 0.75rem; color: #64748B;">Clean historical execution of trade finance against 100% cash.</p>
+            </div>
+            <div class="squircle-card" style="padding: 12px 16px;">
+              <strong style="color: #D97706; font-size: 0.8125rem;">4. Cheque Clearance Ratio</strong>
+              <p style="font-size: 0.75rem; color: #64748B;">Ratio of accepted vs rejected cheques. Instant freeze on bounces.</p>
+            </div>
+            <div class="squircle-card" style="padding: 12px 16px;">
+              <strong style="color: #7C3AED; font-size: 0.8125rem;">5. Customer Risk Rating (CRR)</strong>
+              <p style="font-size: 0.75rem; color: #64748B;">Internal KFH CRR score (1–4) & Ci-Net Credit Bureau record.</p>
+            </div>
+          </div>
+
+          <!-- Screenshot Box -->
+          <div class="squircle-card highlight" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="font-size: 0.875rem; color: #065F46;"><i class="fa-solid fa-desktop"></i> System Screen: New UI Deal Details & RM Review</strong>
+                <span style="font-size: 0.75rem; color: #059669; font-weight: 700;">Live Prototype</span>
+              </div>
+              <div class="screenshot-thumb-box" onclick="openLightbox('screenshots/deal-details-overview.png', 'Deal Details & RM Review (New Squircle UI) — Top 5 KPI Chips, Stage Progress Tracker, and Collapsible Squircle Accordion Cards')">
+                <img src="screenshots/deal-details-overview.png" alt="Deal Details & RM Review Screen">
+                <span class="screenshot-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
+              </div>
+            </div>
+            <p style="font-size: 0.75rem; color: #047857; margin-top: 10px; line-height: 1.4;">
+              <strong>New Squircle Architecture:</strong> Displays real-time deal sizing (KD 175,000), Stage Progress ("RM Review 1/4 completed"), and collateral terms in responsive accordion cards.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Credit Sizing Formula -->
+    <section class="slide-card" data-slide="6">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-calculator"></i> Mathematical Architecture</span>
+          <h2 class="slide-title">Credit Sizing & Repayment Capacity Formula</h2>
+          <p class="slide-subtitle">Transparent Sizing Grounded in the 25% Monthly Retained Cash Rule</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="formula-container">
+            <h3 style="font-size: 1rem; color: #86EFAC; font-weight: 800; margin-bottom: 8px;">Deterministic Sizing Equations</h3>
+            
+            <div class="formula-row">
+              <div>
+                <strong style="font-size: 0.8125rem;">1. Monthly Installment</strong>
+                <p style="font-size: 0.75rem; color: #94A3B8;">25% of unencumbered monthly retained cash</p>
+              </div>
+              <span class="formula-badge">Inst = 0.25 × B_left</span>
+            </div>
+
+            <div class="formula-row">
+              <div>
+                <strong style="font-size: 0.8125rem;">2. Base Calculated Facility (12 Mos)</strong>
+                <p style="font-size: 0.75rem; color: #94A3B8;">Annualized debt servicing capacity</p>
+              </div>
+              <span class="formula-badge">Cap = Inst × 12 = 3.0 × B_left</span>
+            </div>
+
+            <div class="formula-row">
+              <div>
+                <strong style="font-size: 0.8125rem;">3. Allowed Deal Limit (70% Rule)</strong>
+                <p style="font-size: 0.75rem; color: #94A3B8;">Prudential haircut for downside protection</p>
+              </div>
+              <span class="formula-badge">Offer = 0.70 × Cap = 2.10 × B_left</span>
+            </div>
+
+            <div class="formula-row">
+              <div>
+                <strong style="font-size: 0.8125rem;">4. Program Upper Cap</strong>
+                <p style="font-size: 0.75rem; color: #94A3B8;">RFP Phase 1 policy ceiling</p>
+              </div>
+              <span class="formula-badge">Min(Offer, KD 100,000)</span>
+            </div>
+          </div>
+
+          <div class="squircle-card highlight" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <span style="background: #0F5E2A; color: white; padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 750;">The 75% Liquidity Cushion</span>
+              <h3 style="font-size: 1.25rem; font-weight: 850; color: #0F172A; margin: 12px 0 8px;">Why Borrowers Never Default</h3>
+              <p style="font-size: 0.8125rem; color: #475569; line-height: 1.5;">
+                Because the offered deal is <strong>70% of the calculated capacity</strong>, the borrower's actual debt service burden is only:
+              </p>
+              <div style="background: #FFFFFF; border: 1.5px solid #86EFAC; border-radius: 12px; padding: 12px 16px; margin: 12px 0; text-align: center;">
+                <span style="font-size: 1.5rem; font-weight: 900; color: #0F5E2A;">17.5%</span>
+                <span style="font-size: 0.8125rem; color: #64748B; display: block;">of monthly retained cash flow ($0.25 \times 0.70$)</span>
+              </div>
+              <p style="font-size: 0.8125rem; color: #047857; font-weight: 600;">
+                The SME customer preserves <strong>82.5% of their monthly liquidity cushion</strong> for supplier invoices and unforeseen operational fluctuations!
+              </p>
+            </div>
+            <div style="font-size: 0.75rem; color: #64748B; border-top: 1px dashed #CBD5E1; padding-top: 10px;">
+              Fully compliant with Central Bank of Kuwait (CBK) micro/SME debt service ratio regulations.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Live Simulator Widget -->
+    <section class="slide-card" data-slide="7">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-sliders"></i> Interactive Simulator</span>
+          <h2 class="slide-title">Live Behavioral Credit Capacity Simulator</h2>
+          <p class="slide-subtitle">Test the Formula Against Real-World Prospect Parameters</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="calc-box">
+          <div class="calc-input-group">
+            <div class="calc-slider-card">
+              <div class="slider-header">
+                <span>Avg Monthly Retained Balance (B_left)</span>
+                <span class="slider-val" id="dispBalance">KD 15,000</span>
+              </div>
+              <input type="range" id="inputBalance" min="2000" max="60000" step="1000" value="15000" oninput="updateCalculator()">
+            </div>
+
+            <div class="calc-slider-card">
+              <div class="slider-header">
+                <span>Active KFH POS Terminals</span>
+                <span class="slider-val" id="dispPos">3 Terminals</span>
+              </div>
+              <input type="range" id="inputPos" min="0" max="10" step="1" value="3" oninput="updateCalculator()">
+            </div>
+
+            <div class="calc-slider-card">
+              <div class="slider-header">
+                <span>Cash-Backed LCs / LGs</span>
+                <span class="slider-val" id="dispTrade">KD 20,000</span>
+              </div>
+              <input type="range" id="inputTrade" min="0" max="50000" step="5000" value="20000" oninput="updateCalculator()">
+            </div>
+
+            <div class="calc-slider-card">
+              <div class="slider-header">
+                <span>Cheques Cleared Ratio</span>
+                <span class="slider-val" id="dispCheques">100% (Clean)</span>
+              </div>
+              <input type="range" id="inputCheques" min="80" max="100" step="5" value="100" oninput="updateCalculator()">
+            </div>
+          </div>
+
+          <div class="calc-results-card">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #86EFAC; font-weight: 800;">Real-Time AI Offer</span>
+              <h3 style="font-size: 1.125rem; font-weight: 800; margin-top: 4px;">Credit Capacity Results</h3>
+            </div>
+
+            <div style="margin: 14px 0;">
+              <div class="result-row">
+                <span class="result-label">Monthly Installment (25%)</span>
+                <span class="result-val" id="resInstallment">KD 3,750</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Calculated Base Capacity (12M)</span>
+                <span class="result-val" id="resBaseCap">KD 45,000</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Allowed Deal Ratio</span>
+                <span class="result-val">70% Factor</span>
+              </div>
+              <div class="result-row big">
+                <div>
+                  <span class="result-label" style="font-weight: 700; color: #A7F3D0;">OFFERED DEAL AMOUNT</span>
+                  <div style="font-size: 0.75rem; color: #D1FAE5;">(Capped at KD 100,000)</div>
+                </div>
+                <span class="result-val highlight" id="resOfferedDeal">KD 31,500</span>
+              </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; font-size: 0.75rem; color: #E2E8F0;">
+              <i class="fa-solid fa-shield-check text-green-400"></i> Customer keeps <strong>KD 11,250 / mo</strong> retained cash buffer.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: 6-Stage Workflow + Screenshot -->
+    <section class="slide-card" data-slide="8">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-arrows-split-up-and-left"></i> Digital Lifecycle</span>
+          <h2 class="slide-title">End-to-End Deal Workflow (The 6 Stages)</h2>
+          <p class="slide-subtitle">Smooth Inter-Departmental Collaboration from Prospect to Disbursement</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="flow-steps" style="flex-wrap: wrap;">
+          <div class="flow-step-item">
+            <div class="step-number">1</div>
+            <div class="step-name">Assigned RIM</div>
+            <div class="step-desc">Prospect self-initiates or Relationship Officer launches deal with 1-click.</div>
+          </div>
+          <div class="flow-step-item">
+            <div class="step-number">2</div>
+            <div class="step-name">Pending RM</div>
+            <div class="step-desc">RM reviews behavioral data & clicks <em>Apply AI Suggested Terms</em>.</div>
+          </div>
+          <div class="flow-step-item">
+            <div class="step-number">3</div>
+            <div class="step-name">Documentation</div>
+            <div class="step-desc">Fast-track verification of commercial license and company articles.</div>
+          </div>
+          <div class="flow-step-item">
+            <div class="step-number">4</div>
+            <div class="step-name">Implementation</div>
+            <div class="step-desc">Profit margin configuration & Murabaha draft agreement generation.</div>
+          </div>
+          <div class="flow-step-item">
+            <div class="step-number">5</div>
+            <div class="step-name">Customer Review</div>
+            <div class="step-desc">Customer inspects Old vs. New comparison and signs digitally.</div>
+          </div>
+          <div class="flow-step-item">
+            <div class="step-number">6</div>
+            <div class="step-name">Disbursement</div>
+            <div class="step-desc">Disbursement officer executes Core Banking <code>eService</code>.</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+          <!-- Screenshot 1: Workflow pipeline donut -->
+          <div class="squircle-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="font-size: 0.8125rem; color: #0F172A;"><i class="fa-solid fa-desktop"></i> Workflow Progress Tracker (New UI)</strong>
+              <span style="font-size: 0.6875rem; color: var(--kfh-dark-green); font-weight: 700;">Live Screen</span>
+            </div>
+            <div class="screenshot-thumb-box" onclick="openLightbox('screenshots/workflow-pipeline-donut.png', 'Operational Workflow Progress & Deal Status (New UI) — 6 stages: RM Review, Documentation, Implementation, Customer Approval, Disbursement')">
+              <img src="screenshots/workflow-pipeline-donut.png" alt="Workflow Progress Donut">
+              <span class="screenshot-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Zoom</span>
+            </div>
+          </div>
+
+          <!-- Screenshot 2: Recent Deals Queue -->
+          <div class="squircle-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="font-size: 0.8125rem; color: #0F172A;"><i class="fa-solid fa-desktop"></i> Multi-Deal Queue Management (New UI)</strong>
+              <span style="font-size: 0.6875rem; color: var(--kfh-dark-green); font-weight: 700;">Live Screen</span>
+            </div>
+            <div class="screenshot-thumb-box" onclick="openLightbox('screenshots/recent-deals-table.png', 'Recent Deals Management Queue (New UI) — Real-time search, multi-status filters, customer profiles, and stage actions')">
+              <img src="screenshots/recent-deals-table.png" alt="Recent Deals Table">
+              <span class="screenshot-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Zoom</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: UX/UI Design System + Screenshot -->
+    <section class="slide-card" data-slide="9">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-paintbrush"></i> User Experience</span>
+          <h2 class="slide-title">KFH Modern Squircle Design System (`sme-lending_UX`)</h2>
+          <p class="slide-subtitle">Executive Polish, Top 5 KPI Chips, and Customer Old vs. New Comparison</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <!-- Screenshot Box -->
+          <div class="squircle-card highlight" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="font-size: 0.875rem; color: #065F46;"><i class="fa-solid fa-desktop"></i> System Screen: Top 5 KPIs & Stage Tracker</strong>
+                <span style="font-size: 0.75rem; color: #059669; font-weight: 700;">Live Prototype (New UI)</span>
+              </div>
+              <div class="screenshot-thumb-box" onclick="openLightbox('screenshots/kpi-summary-chips.png', 'New UI Top 5 Summary KPI Chips (Deal Amount 175,000 KWD, Deal ID DL-2603, Submitted, Status, Product) & Stage Progress Bar')">
+                <img src="screenshots/kpi-summary-chips.png" alt="Top 5 KPI Chips and Stage Progress">
+                <span class="screenshot-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
+              </div>
+            </div>
+            <p style="font-size: 0.75rem; color: #047857; margin-top: 10px; line-height: 1.4;">
+              <strong>KFH Brand Palette:</strong> Rounded squircle cards (16px–24px), soft elevation, KFH green accents (`#2D7864` & `#43B02A`), and clear financial hierarchy.
+            </p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="squircle-card">
+              <span style="font-size: 0.75rem; font-weight: 800; color: var(--kfh-dark-green); text-transform: uppercase;">RM Screen Innovation</span>
+              <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin: 4px 0;">"Apply AI Suggested Terms" Action Box</h4>
+              <p style="font-size: 0.75rem; color: #64748B; line-height: 1.4;">
+                RM can click 1 button to update the deal with the AI-recommended amount and 12-month tenor, or revert to original requested terms at any time.
+              </p>
+            </div>
+
+            <div class="squircle-card">
+              <span style="font-size: 0.75rem; font-weight: 800; color: #2563EB; text-transform: uppercase;">Customer Review Innovation</span>
+              <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin: 4px 0;">Transparent Old vs. New Comparison</h4>
+              <p style="font-size: 0.75rem; color: #64748B; line-height: 1.4;">
+                Borrower sees side-by-side cards comparing requested terms with the approved offer (Amount, Tenor, Installments & Monthly payment) before e-signing.
+              </p>
+            </div>
+
+            <div class="squircle-card">
+              <span style="font-size: 0.75rem; font-weight: 800; color: #D97706; text-transform: uppercase;">Bilingual Localization</span>
+              <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin: 4px 0;">English / Arabic Language Switcher</h4>
+              <p style="font-size: 0.75rem; color: #64748B; line-height: 1.4;">
+                Full RTL alignment, translated terminology, and localized currency formatting for Kuwaiti market operations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: System Screenshot Showcase Gallery (NEW SLIDE) -->
+    <section class="slide-card" data-slide="10">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-images"></i> Live System Showcase</span>
+          <h2 class="slide-title">Interactive System Screenshot Gallery</h2>
+          <p class="slide-subtitle">Inspect the Working System Across All Operational Workflows</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+          <button class="pres-btn active" id="tabBtn1" onclick="switchGalleryTab(1)">1. Dashboard</button>
+          <button class="pres-btn" id="tabBtn2" onclick="switchGalleryTab(2)">2. Deal Details & RM</button>
+          <button class="pres-btn" id="tabBtn3" onclick="switchGalleryTab(3)">3. Top 5 KPI Chips</button>
+          <button class="pres-btn" id="tabBtn4" onclick="switchGalleryTab(4)">4. Workflow Donut</button>
+          <button class="pres-btn" id="tabBtn5" onclick="switchGalleryTab(5)">5. Deal Terms Card</button>
+          <button class="pres-btn" id="tabBtn6" onclick="switchGalleryTab(6)">6. Recent Deals Table</button>
+        </div>
+
+        <div class="squircle-card" style="padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0F172A;">
+          <div style="width: 100%; height: 380px; display: flex; align-items: center; justify-content: center; cursor: pointer;" id="galleryImageContainer" onclick="zoomCurrentGalleryImage()">
+            <img id="galleryMainImg" src="screenshots/dashboard-analytics.png" alt="Gallery View" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
+          </div>
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 2px; color: #E2E8F0; font-size: 0.8125rem;">
+            <span id="galleryCaption"><strong>Screen 1:</strong> Operational Dashboard — Pipeline Donut & Status Bars</span>
+            <span style="color: #86EFAC;"><i class="fa-solid fa-expand"></i> Click image to open in full screen</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Risk Governance -->
+    <section class="slide-card" data-slide="11">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-scale-balanced"></i> Governance & Compliance</span>
+          <h2 class="slide-title">Institutional Risk Governance & Sharia Compliance</h2>
+          <p class="slide-subtitle">Ensuring Strict Alignment with KFH Sharia Board and Central Bank of Kuwait (CBK)</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="squircle-card">
+            <div style="font-size: 1.5rem; color: var(--kfh-dark-green); margin-bottom: 10px;"><i class="fa-solid fa-kaaba"></i></div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Sharia-Compliant Financing Structures</h4>
+            <ul style="font-size: 0.8125rem; color: #475569; display: flex; flex-direction: column; gap: 8px; padding-left: 18px; line-height: 1.4;">
+              <li><strong>Commodity Murabaha</strong>: Clear purchase and sale of commodities with transparent cost plus fixed profit margin.</li>
+              <li><strong>Cashline (Islamic Overdraft)</strong>: Sharia-approved revolving facility backed by commodity Murabaha tranches.</li>
+              <li><strong>Digital Offer & Acceptance (Ijab & Qubul)</strong>: Legally binding electronic contract execution.</li>
+            </ul>
+          </div>
+
+          <div class="squircle-card">
+            <div style="font-size: 1.5rem; color: #D97706; margin-bottom: 10px;"><i class="fa-solid fa-shield-halved"></i></div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Dual-Layer Risk Safeguards</h4>
+            <ul style="font-size: 0.8125rem; color: #475569; display: flex; flex-direction: column; gap: 8px; padding-left: 18px; line-height: 1.4;">
+              <li><strong>Cheque Bounce Sentry</strong>: Any dishonored cheque due to non-sufficient funds triggers immediate limit block.</li>
+              <li><strong>Prudential Haircut (70%)</strong>: Automatic 30% safety reserve against cash flow seasonality.</li>
+              <li><strong>Approval Guard</strong>: Relationship Managers cannot bypass the AI evaluation step.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 14px; padding: 14px 20px; font-size: 0.8125rem; color: #065F46;">
+          <strong>Audit Compliance:</strong> All credit determinations, behavioral parameters, and Core Banking payloads are permanently stored in Dexie IndexedDB and system event logs for regulatory audit.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: Business Impact & Roadmap -->
+    <section class="slide-card" data-slide="12">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag"><i class="fa-solid fa-rocket"></i> Impact & Vision</span>
+          <h2 class="slide-title">Business Impact, ROI & Future Roadmap</h2>
+          <p class="slide-subtitle">Positioning Kuwait Finance House as the Undisputed Digital SME Leader</p>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-4">
+          <div class="metric-chip">
+            <span class="metric-chip-label">Turnaround Time</span>
+            <span class="metric-chip-val" style="color: #10B981;">&lt; 24 Hrs</span>
+            <span class="metric-chip-desc">Down from 3–4 Weeks</span>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-chip-label">Acquisition Cost</span>
+            <span class="metric-chip-val" style="color: #10B981;">-75%</span>
+            <span class="metric-chip-desc">Zero manual auditing</span>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-chip-label">Addressable Market</span>
+            <span class="metric-chip-val" style="color: var(--kfh-dark-green);">20,500+</span>
+            <span class="metric-chip-desc">Non-borrowing SMEs</span>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-chip-label">Max Ticket Size</span>
+            <span class="metric-chip-val" style="color: var(--kfh-dark-green);">KD 100K</span>
+            <span class="metric-chip-desc">Phase 1 Cap</span>
+          </div>
+        </div>
+
+        <div class="squircle-card" style="margin-top: 10px;">
+          <h4 style="font-size: 0.9375rem; font-weight: 800; color: #0F172A; margin-bottom: 8px;">Evolutionary Strategic Roadmap</h4>
+          <div class="grid-3" style="gap: 12px;">
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px;">
+              <span style="font-size: 0.75rem; font-weight: 750; color: var(--kfh-dark-green);">PHASE 1 (RFP PILOT)</span>
+              <p style="font-size: 0.75rem; color: #475569; margin-top: 4px;">Existing KFH POS & cash-backed trade clients with zero debt. Murabaha & Cashline up to KD 100K.</p>
+            </div>
+            <div style="background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 12px; padding: 12px;">
+              <span style="font-size: 0.75rem; font-weight: 750; color: #166534;">PHASE 1.5 (DELIVERED)</span>
+              <p style="font-size: 0.75rem; color: #065F46; margin-top: 4px;">TWQ Workbench platform with full 6-stage lifecycle, AI Engine, and Core Banking <code>eService</code> integration.</p>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px;">
+              <span style="font-size: 0.75rem; font-weight: 750; color: #2563EB;">PHASE 2 (NEXT HORIZON)</span>
+              <p style="font-size: 0.75rem; color: #475569; margin-top: 4px;">Open Banking API integration for new-to-bank prospects and predictive AI default probability models.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: auto;">
+          <button class="pres-btn" onclick="goToSlide(1)"><i class="fa-solid fa-rotate-left"></i> Restart</button>
+          <button class="pres-btn primary" onclick="goToSlide(7)"><i class="fa-solid fa-sliders"></i> Open Live Simulator</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Lightbox Modal for Screenshots -->
+  <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox(event)">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <button class="lightbox-close-btn" onclick="closeLightbox(event)"><i class="fa-solid fa-xmark"></i></button>
+      <img id="lightboxImg" src="" alt="Zoomed Screenshot">
+      <div id="lightboxCaption" style="font-size: 0.875rem; color: #475569; font-weight: 600; margin-top: 10px; text-align: center;"></div>
+    </div>
+  </div>
+
+  <!-- Speaker Notes Drawer -->
+  <aside class="speaker-drawer" id="speakerDrawer">
+    <strong>Speaker Notes (Slide <span id="notesSlideNum">1</span>):</strong>
+    <p id="speakerNotesText" style="margin-top: 4px; line-height: 1.5;">Welcome executive team. This presentation outlines how KFH transforms non-borrowing depositors into profitable borrowing relationships using behavioral underwriting.</p>
+  </aside>
+
+  <!-- Bottom Timeline & Controls -->
+  <footer class="pres-footer">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="color: #94A3B8; font-size: 0.75rem; font-weight: 600;">KFH SME PROGRAM LENDING</span>
+    </div>
+
+    <div class="timeline-dots" id="timelineDots">
+      <!-- Generated via JS -->
+    </div>
+
+    <div style="display: flex; gap: 8px;">
+      <button class="pres-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+      <button class="pres-btn primary" onclick="nextSlide()">Next <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+    let isArabic = false;
+
+    const speakerNotes = {
+      1: "Welcome executive team. This presentation introduces the TWQ Workbench SME Program Lending platform, developed in direct alignment with KFH's SME Program Lending RFP to monetize our non-borrowing depositor base.",
+      2: "Highlight the executive opportunity: Proactively identifying non-borrowing SME depositors and extending pre-qualified credit using behavioral intelligence. Point to the live dashboard screenshot showing deal status progression and queue analytics.",
+      3: "Confirm that TWQ Workbench addresses all 3 RFP phases: Onboarding, Review & Approvals, and Core Banking Funding. Tickets are capped at KD 100,000 with Murabaha and Cashline product lines.",
+      4: "Explain the Prospect Discovery Engine: Rather than waiting for SMEs to apply, the system scours the depositor base and creates pre-qualified opportunities for Relationship Managers in their RM Queue.",
+      5: "Detail the 5 behavioral underwriting pillars: Average ending monthly balance, POS volumes, cash-collateralized trade instruments, cheque clearing track record, and customer risk rating. Point to the live Deal Details & RM Review screen showcasing squircle cards.",
+      6: "Walk through the mathematical formula: Step 1 establishes a 25% installment cap on monthly cash left. Step 2 annualizes over 12 months. Step 3 applies a 70% haircut, leaving the borrower with an 82.5% cash cushion.",
+      7: "Engage the audience with the Live Simulator. Adjust the retained balance and show how the offered deal dynamically updates in real time with the KD 100,000 cap.",
+      8: "Review the 6-stage digital workflow: Assigned RIM -> Pending RM -> Pending Documentation -> Pending Implementation -> Customer Review -> Disbursement. Note the real screenshots of the workflow progress donut chart and the recent deals management queue.",
+      9: "Showcase the UX team polish: Modern squircle cards, top 5 KPI chips, RM 'Apply Suggested Terms' button, and customer transparent Old vs New comparison. Show the screenshot of the Top 5 KPI chips and stage progress bar.",
+      10: "Interactive Screenshot Gallery: Walk through each screen of the working prototype (Dashboard, Deal Details & RM Review, Top 5 KPI Chips, Workflow Donut, Deal Terms Card, and Recent Deals Table).",
+      11: "Address governance and Sharia compliance: Commodity Murabaha structures, Central Bank of Kuwait alignment, and the automated cheque bounce sentry.",
+      12: "Conclude with the business impact: TAT reduced from weeks to hours, 75% cost savings, and roadmap progression to Phase 2 Open Banking."
+    };
+
+    const galleryData = {
+      1: { src: "screenshots/dashboard-analytics.png", caption: "Screen 1: Operational Dashboard (New UI) — Real-time pipeline, status donut, and recent deals overview" },
+      2: { src: "screenshots/deal-details-overview.png", caption: "Screen 2: Deal Details & RM Review (New UI) — Full review view with breadcrumbs, Top 5 KPIs, and squircle accordions" },
+      3: { src: "screenshots/kpi-summary-chips.png", caption: "Screen 3: Top 5 Summary KPI Chips & Stage Tracker (New UI) — 175,000 KWD, DL-2603, Trade Finance, RM Review 1/4 completed" },
+      4: { src: "screenshots/workflow-pipeline-donut.png", caption: "Screen 4: Workflow Progress & Pipeline Donut (New UI) — 37 deals, stage donut chart, and deal status progression bars" },
+      5: { src: "screenshots/deal-terms-accordion.png", caption: "Screen 5: Deal Terms Accordion Card (New UI) — Murabaha deal terms, 5.00% rate, 2.75% margin, 24 months, and edit button" },
+      6: { src: "screenshots/recent-deals-table.png", caption: "Screen 6: Recent Deals Queue & Filters (New UI) — Instant search, status dropdown, client list, and view details action" }
+    };
+
+    let currentGalleryTab = 1;
+
+    function switchGalleryTab(idx) {
+      currentGalleryTab = idx;
+      for (let i = 1; i <= 6; i++) {
+        const btn = document.getElementById(`tabBtn${i}`);
+        if (btn) btn.classList.toggle('active', i === idx);
+      }
+      const item = galleryData[idx];
+      if (item) {
+        document.getElementById('galleryMainImg').src = item.src;
+        document.getElementById('galleryCaption').innerHTML = item.caption;
+      }
+    }
+
+    function zoomCurrentGalleryImage() {
+      const item = galleryData[currentGalleryTab];
+      if (item) openLightbox(item.src, item.caption);
+    }
+
+    function openLightbox(src, caption) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').innerText = caption || "";
+      document.getElementById('lightboxModal').classList.add('open');
+    }
+
+    function closeLightbox(e) {
+      document.getElementById('lightboxModal').classList.remove('open');
+    }
+
+    function initTimeline() {
+      const container = document.getElementById('timelineDots');
+      container.innerHTML = '';
+      for (let i = 1; i <= totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = `timeline-dot ${i === currentSlide ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(i);
+        container.appendChild(dot);
+      }
+    }
+
+    function goToSlide(n) {
+      if (n < 1 || n > totalSlides) return;
+      document.querySelectorAll('.slide-card').forEach(s => s.classList.remove('active'));
+      const target = document.querySelector(`.slide-card[data-slide="${n}"]`);
+      if (target) {
+        target.classList.add('active');
+        currentSlide = n;
+        document.getElementById('slideIndicator').innerText = `${currentSlide} / ${totalSlides}`;
+        document.getElementById('notesSlideNum').innerText = currentSlide;
+        document.getElementById('speakerNotesText').innerText = speakerNotes[currentSlide] || "";
+        initTimeline();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) goToSlide(currentSlide - 1);
+    }
+
+    function toggleNotes() {
+      const drawer = document.getElementById('speakerDrawer');
+      drawer.classList.toggle('open');
+    }
+
+    function toggleLanguage() {
+      isArabic = !isArabic;
+      const body = document.getElementById('presBody');
+      const langBtnText = document.getElementById('langBtnText');
+      if (isArabic) {
+        body.setAttribute('dir', 'rtl');
+        langBtnText.innerText = 'English';
+        document.getElementById('presHeaderTitle').innerText = 'منصة طوق بيتك — تمويل برامج المشروعات الصغيرة والمتوسطة';
+        document.getElementById('presHeaderSubtitle').innerText = 'التقييم الائتماني السلوكي الآلي والمنح الرقمي للعملاء المرتقبين';
+      } else {
+        body.removeAttribute('dir');
+        langBtnText.innerText = 'العربية';
+        document.getElementById('presHeaderTitle').innerText = 'KFH TWQ Workbench — SME Program Lending';
+        document.getElementById('presHeaderSubtitle').innerText = 'Behavioral Underwriting & Automated Origination for Prospect SMEs';
+      }
+    }
+
+    function updateCalculator() {
+      const balance = Number(document.getElementById('inputBalance').value);
+      const posCount = Number(document.getElementById('inputPos').value);
+      const tradeAmount = Number(document.getElementById('inputTrade').value);
+      const chequesPct = Number(document.getElementById('inputCheques').value);
+
+      document.getElementById('dispBalance').innerText = `KD ${balance.toLocaleString()}`;
+      document.getElementById('dispPos').innerText = `${posCount} Terminals`;
+      document.getElementById('dispTrade').innerText = `KD ${tradeAmount.toLocaleString()}`;
+      document.getElementById('dispCheques').innerText = chequesPct === 100 ? '100% (Clean)' : `${chequesPct}%`;
+
+      // Formula calculations
+      // 1. Monthly Installment = 25% of retained balance
+      const installment = Math.round(balance * 0.25);
+      
+      // 2. Base 12-month Capacity = installment * 12 = balance * 3.0
+      const baseCap = installment * 12;
+
+      // 3. Allowed Deal = 70% of base capacity = balance * 2.1
+      let allowedDeal = Math.round(baseCap * 0.70);
+
+      // Check Cheques penalty
+      if (chequesPct < 90) {
+        allowedDeal = Math.round(allowedDeal * 0.7); // 30% risk penalty
+      }
+
+      // Check Cap
+      const finalDeal = Math.min(allowedDeal, 100000);
+
+      document.getElementById('resInstallment').innerText = `KD ${installment.toLocaleString()}`;
+      document.getElementById('resBaseCap').innerText = `KD ${baseCap.toLocaleString()}`;
+      document.getElementById('resOfferedDeal').innerText = `KD ${finalDeal.toLocaleString()}${allowedDeal > 100000 ? ' (Capped)' : ''}`;
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+
+    // Initialize
+    initTimeline();
+    updateCalculator();
+  </script>
+</body>
+</html>
